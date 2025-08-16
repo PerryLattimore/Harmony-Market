@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harmony Market | 音乐交易平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0071e3;
+            --secondary: #1d1d1f;
+            --accent: #ff2d55;
+            --light: #f5f5f7;
+            --dark: #121212;
+            --gray: #86868b;
+            --light-gray: #e0e0e0;
+            --card-bg: #ffffff;
+            --gradient: linear-gradient(135deg, #0071e3, #7b68ee);
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            --shadow-hover: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* 装饰背景元素 */
+        .decorations {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(0, 113, 227, 0.03);
+        }
+        
+        .circle-1 {
+            width: 500px;
+            height: 500px;
+            top: -200px;
+            right: -200px;
+        }
+        
+        .circle-2 {
+            width: 300px;
+            height: 300px;
+            bottom: 100px;
+            left: -100px;
+        }
+        
+        .line {
+            position: absolute;
+            background: rgba(0, 113, 227, 0.05);
+        }
+        
+        .line-1 {
+            width: 100%;
+            height: 1px;
+            top: 40%;
+            transform: rotate(-3deg);
+        }
+        
+        .line-2 {
+            width: 100%;
+            height: 1px;
+            top: 70%;
+            transform: rotate(2deg);
+        }
+        
+        /* 导航栏 */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #000;
+        }
+        
+        .logo i {
+            color: var(--primary);
+        }
+        
+        nav ul {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+        
+        nav a {
+            color: var(--gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            font-size: 16px;
+            position: relative;
+        }
+        
+        nav a:hover, nav a.active {
+            color: var(--primary);
+        }
+        
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 15px;
+            border: none;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--light-gray);
+            color: var(--secondary);
+        }
+        
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #0077ed;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 113, 227, 0.2);
+        }
+        
+        /* 主内容区 */
+        .container {
+            max-width: 1400px;
+            margin: 40px auto;
+            padding: 0 5%;
+        }
+        
+        .hero {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            margin: 60px 0;
+        }
+        
+        .hero-content {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+        
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .hero-image img {
+            max-width: 100%;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .hero-stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* 音乐发现区域 */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+        
+        .view-all {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .discover-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .discover-card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            overflow: hidden;
+            transition: all 0.3s;
+            position: relative;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .discover-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .discover-cover {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .discover-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .discover-card:hover .discover-cover img {
+            transform: scale(1.05);
+        }
+        
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .discover-card:hover .play-overlay {
+            opacity: 1;
+        }
+        
+        .play-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .play-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .discover-info {
+            padding: 20px;
+        }
+        
+        .discover-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .discover-artist {
+            color: var(--gray);
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        
+        .discover-description {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .price-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+        
+        .auction-tag {
+            background: var(--accent);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .fixed-price-tag {
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .action-btn {
+            padding: 8px 20px;
+            border-radius: 20px;
+            background: rgba(0, 113, 227, 0.1);
+            color: var(--primary);
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* 分类浏览 */
+        .categories {
+            display: flex;
+            gap: 15px;
+            margin: 40px 0;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+        
+        .category {
+            flex: 0 0 auto;
+            padding: 15px 25px;
+            border-radius: 50px;
+            background: rgba(0, 113, 227, 0.05);
+            color: var(--primary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(0, 113, 227, 0.1);
+        }
+        
+        .category:hover, .category.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* 特色艺术家 */
+        .artists-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .artist-card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            overflow: hidden;
+            transition: all 0.3s;
+            position: relative;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            text-align: center;
+            padding: 20px;
+            cursor: pointer;
+        }
+        
+        .artist-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .artist-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 15px;
+            border: 3px solid rgba(0, 113, 227, 0.1);
+        }
+        
+        .artist-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .artist-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .artist-genre {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .artist-sales {
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        /* 最新交易 */
+        .transactions {
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 30px;
+            margin: 60px 0;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .transaction-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+        
+        .transaction-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+        
+        .transaction-cover {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+        
+        .transaction-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .transaction-info {
+            flex: 1;
+        }
+        
+        .transaction-title {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        
+        .transaction-artist {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .transaction-price {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .transaction-time {
+            color: var(--gray);
+            font-size: 0.85rem;
+            text-align: right;
+        }
+        
+        /* 用户评价 */
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .testimonial-card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .testimonial-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+        
+        .testimonial-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .testimonial-user {
+            flex: 1;
+        }
+        
+        .testimonial-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .testimonial-role {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .testimonial-rating {
+            color: #ffc107;
+        }
+        
+        .testimonial-content {
+            color: #666;
+            line-height: 1.7;
+            font-style: italic;
+        }
+        
+        /* 音乐播放器 */
+        .player-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 15px 5%;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .now-playing {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 220px;
+        }
+        
+        .now-playing-cover {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .now-playing-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .now-playing-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .now-playing-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .now-playing-artist {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .player-controls {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .control-buttons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .control-btn {
+            background: none;
+            border: none;
+            color: #333;
+            cursor: pointer;
+            font-size: 16px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+        
+        .control-btn:hover {
+            background: rgba(0, 113, 227, 0.1);
+            color: var(--primary);
+        }
+        
+        .play-pause-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: white;
+        }
+        
+        .play-pause-btn:hover {
+            transform: scale(1.1);
+            background: #0077ed;
+        }
+        
+        .progress-container {
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .progress {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 2px;
+            width: 30%;
+            position: relative;
+        }
+        
+        .progress::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+        
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+        
+        .volume-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 120px;
+        }
+        
+        .volume-bar {
+            width: 80px;
+            height: 4px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .volume-level {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 2px;
+            width: 70%;
+        }
+        
+        /* 模态框 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .modal-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--secondary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 12px;
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            color: #333;
+            font-family: inherit;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        /* 页脚 */
+        footer {
+            background: #f8f9fa;
+            padding: 60px 5% 40px;
+            margin-top: 80px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .footer-col h3 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .footer-col ul {
+            list-style: none;
+        }
+        
+        .footer-col li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-col a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-col a:hover {
+            color: var(--primary);
+        }
+        
+        .newsletter {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .newsletter input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 40px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .hero {
+                flex-direction: column;
+            }
+            
+            .hero-content {
+                text-align: center;
+                margin-bottom: 40px;
+            }
+            
+            .hero p {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            .hero-stats {
+                justify-content: center;
+            }
+            
+            .footer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-stats {
+                flex-wrap: wrap;
+            }
+            
+            .discover-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .player-container {
+                flex-wrap: wrap;
+                padding: 10px;
+            }
+            
+            .now-playing {
+                min-width: auto;
+            }
+            
+            .volume-control {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 装饰背景元素 -->
+    <div class="decorations">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="line line-1"></div>
+        <div class="line line-2"></div>
+    </div>
+    
+    <!-- 导航栏 -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-music"></i>
+            <span>Harmony Market</span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" class="active">首页</a></li>
+                <li><a href="#">发现</a></li>
+                <li><a href="#">排行榜</a></li>
+                <li><a href="#">艺术家</a></li>
+                <li><a href="#">关于</a></li>
+            </ul>
+        </nav>
+        <div class="user-actions">
+            <button class="btn btn-outline" id="login-btn">登录</button>
+            <button class="btn btn-primary" id="register-btn">注册</button>
+        </div>
+    </header>
+    
+    <!-- 主内容区 -->
+    <div class="container">
+        <!-- 英雄区域 -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>发现、交易、拥有独特的音乐体验</h1>
+                <p>Harmony Market是领先的音乐NFT交易平台，让音乐创作者直接向粉丝销售作品，支持一口价购买或拍卖竞价，获得作品永久所有权。</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary">探索音乐</button>
+                    <button class="btn btn-outline">成为创作者</button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">10,000+</div>
+                        <div class="stat-label">音乐作品</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">2,500+</div>
+                        <div class="stat-label">创作者</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">$5.8M+</div>
+                        <div class="stat-label">交易额</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="音乐平台">
+            </div>
+        </section>
+        
+        <!-- 分类浏览 -->
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">浏览分类</h2>
+            </div>
+            <div class="categories">
+                <div class="category active" data-category="all">全部</div>
+                <div class="category" data-category="electronic">电子音乐</div>
+                <div class="category" data-category="pop">流行</div>
+                <div class="category" data-category="hiphop">嘻哈</div>
+                <div class="category" data-category="rock">摇滚</div>
+                <div class="category" data-category="classical">古典</div>
+                <div class="category" data-category="jazz">爵士</div>
+                <div class="category" data-category="ambient">氛围音乐</div>
+                <div class="category" data-category="soundtrack">电影配乐</div>
+                <div class="category" data-category="indie">独立音乐</div>
+            </div>
+        </section>
+        
+        <!-- 发现音乐区域 -->
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">热门音乐作品</h2>
+                <a href="#" class="view-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            
+            <div class="discover-grid">
+                <!-- 音乐卡片 1 -->
+                <div class="discover-card" data-category="electronic">
+                    <div class="discover-cover">
+                        <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="专辑封面">
+                        <div class="play-overlay">
+                            <div class="play-btn" data-song="midnight-dreams">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="discover-info">
+                        <h3 class="discover-title">Midnight Dreams</h3>
+                        <p class="discover-artist">Alex Turner</p>
+                        <p class="discover-description">舒缓的电子氛围音乐，适合深夜工作或放松时聆听，带你进入宁静的梦境。</p>
+                        <div class="price-info">
+                            <div>
+                                <div class="fixed-price-tag">一口价</div>
+                                <div class="price">0.8 ETH</div>
+                            </div>
+                            <button class="action-btn buy-btn" data-song="midnight-dreams">购买</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 音乐卡片 2 -->
+                <div class="discover-card" data-category="hiphop">
+                    <div class="discover-cover">
+                        <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="专辑封面">
+                        <div class="play-overlay">
+                            <div class="play-btn" data-song="urban-pulse">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="discover-info">
+                        <h3 class="discover-title">Urban Pulse</h3>
+                        <p class="discover-artist">Sophia Martinez</p>
+                        <p class="discover-description">充满活力的城市节拍，融合了嘻哈和电子元素，捕捉现代都市的脉搏。</p>
+                        <div class="price-info">
+                            <div>
+                                <div class="auction-tag">拍卖中</div>
+                                <div class="price">1.2 ETH</div>
+                            </div>
+                            <button class="action-btn bid-btn" data-song="urban-pulse">出价</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 音乐卡片 3 -->
+                <div class="discover-card" data-category="ambient">
+                    <div class="discover-cover">
+                        <img src="https://images.unsplash.com/photo-1494232410401-ad00d5433cfa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="专辑封面">
+                        <div class="play-overlay">
+                            <div class="play-btn" data-song="ocean-breeze">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="discover-info">
+                        <h3 class="discover-title">Ocean Breeze</h3>
+                        <p class="discover-artist">Luna Waves</p>
+                        <p class="discover-description">轻柔的海浪声与空灵人声交织，创造放松身心的冥想音乐体验。</p>
+                        <div class="price-info">
+                            <div>
+                                <div class="fixed-price-tag">一口价</div>
+                                <div class="price">0.5 ETH</div>
+                            </div>
+                            <button class="action-btn buy-btn" data-song="ocean-breeze">购买</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 音乐卡片 4 -->
+                <div class="discover-card" data-category="electronic">
+                    <div class="discover-cover">
+                        <img src="https://images.unsplash.com/photo-1507838153414-b4b713384a76?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="专辑封面">
+                        <div class="play-overlay">
+                            <div class="play-btn" data-song="neon-nights">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="discover-info">
+                        <h3 class="discover-title">Neon Nights</h3>
+                        <p class="discover-artist">DJ Retro</p>
+                        <p class="discover-description">复古合成器浪潮音乐，带你回到80年代霓虹闪耀的夜晚。</p>
+                        <div class="price-info">
+                            <div>
+                                <div class="auction-tag">拍卖中</div>
+                                <div class="price">2.1 ETH</div>
+                            </div>
+                            <button class="action-btn bid-btn" data-song="neon-nights">出价</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 特色艺术家 -->
+        <section style="margin-top: 80px;">
+            <div class="section-header">
+                <h2 class="section-title">特色艺术家</h2>
+                <a href="#" class="view-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            
+            <div class="artists-grid">
+                <!-- 艺术家 1 -->
+                <div class="artist-card" data-artist="alex-turner">
+                    <div class="artist-avatar">
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="艺术家">
+                    </div>
+                    <div class="artist-name">Alex Turner</div>
+                    <div class="artist-genre">电子音乐制作人</div>
+                    <div class="artist-sales">42 作品售出</div>
+                </div>
+                
+                <!-- 艺术家 2 -->
+                <div class="artist-card" data-artist="sophia-martinez">
+                    <div class="artist-avatar">
+                        <img src="https://images.unsplash.com/photo-1474978528675-4a50a4508dc3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="艺术家">
+                    </div>
+                    <div class="artist-name">Sophia Martinez</div>
+                    <div class="artist-genre">嘻哈艺术家</div>
+                    <div class="artist-sales">28 作品售出</div>
+                </div>
+                
+                <!-- 艺术家 3 -->
+                <div class="artist-card" data-artist="luna-waves">
+                    <div class="artist-avatar">
+                        <img src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="艺术家">
+                    </div>
+                    <div class="artist-name">Luna Waves</div>
+                    <div class="artist-genre">氛围音乐创作者</div>
+                    <div class="artist-sales">35 作品售出</div>
+                </div>
+                
+                <!-- 艺术家 4 -->
+                <div class="artist-card" data-artist="dj-retro">
+                    <div class="artist-avatar">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="艺术家">
+                    </div>
+                    <div class="artist-name">DJ Retro</div>
+                    <div class="artist-genre">复古电子音乐人</div>
+                    <div class="artist-sales">19 作品售出</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 最新交易 -->
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">最新交易</h2>
+                <a href="#" class="view-all">查看全部 <i class="fas fa-arrow-right"></i></a>
+            </div>
+            
+            <div class="transactions">
+                <div class="transaction-list">
+                    <!-- 交易记录会通过JS动态添加 -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- 用户评价 -->
+        <section>
+            <div class="section-header">
+                <h2 class="section-title">用户评价</h2>
+            </div>
+            
+            <div class="testimonials-grid">
+                <!-- 评价 1 -->
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="用户">
+                        </div>
+                        <div class="testimonial-user">
+                            <div class="testimonial-name">Emma Johnson</div>
+                            <div class="testimonial-role">音乐收藏家</div>
+                        </div>
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="testimonial-content">
+                        "Harmony Market彻底改变了我的音乐收藏体验。我在这里发现了许多独特的音乐作品，并直接支持了创作者。平台界面简洁易用，交易过程透明安全。"
+                    </div>
+                </div>
+                
+                <!-- 评价 2 -->
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="用户">
+                        </div>
+                        <div class="testimonial-user">
+                            <div class="testimonial-name">Michael Chen</div>
+                            <div class="testimonial-role">独立音乐人</div>
+                        </div>
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="testimonial-content">
+                        "作为独立音乐人，Harmony Market给了我一个展示作品的绝佳平台。我通过拍卖卖出了我的第一首作品，收益远超预期。平台的手续费合理，支付流程也很顺畅。"
+                    </div>
+                </div>
+                
+                <!-- 评价 3 -->
+                <div class="testimonial-card">
+                    <div class="testimonial-header">
+                        <div class="testimonial-avatar">
+                            <img src="https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="用户">
+                        </div>
+                        <div class="testimonial-user">
+                            <div class="testimonial-name">Sarah Williams</div>
+                            <div class="testimonial-role">音乐爱好者</div>
+                        </div>
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                    <div class="testimonial-content">
+                        "我喜欢在Harmony Market上发现新音乐。平台上的作品质量很高，每首音乐都有详细的描述和试听功能。购买过程简单快捷，客服团队也非常专业和及时响应。"
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- 音乐播放器 -->
+    <div class="player-container">
+        <div class="now-playing">
+            <div class="now-playing-cover">
+                <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="专辑封面">
+            </div>
+            <div class="now-playing-info">
+                <div class="now-playing-title">选择一首歌曲</div>
+                <div class="now-playing-artist">点击播放按钮开始</div>
+            </div>
+        </div>
+        
+        <div class="player-controls">
+            <div class="control-buttons">
+                <button class="control-btn" id="shuffle-btn">
+                    <i class="fas fa-random"></i>
+                </button>
+                <button class="control-btn" id="prev-btn">
+                    <i class="fas fa-step-backward"></i>
+                </button>
+                <button class="control-btn play-pause-btn" id="play-btn">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button class="control-btn" id="next-btn">
+                    <i class="fas fa-step-forward"></i>
+                </button>
+                <button class="control-btn" id="repeat-btn">
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <div class="time-info">
+                    <span id="current-time">0:00</span>
+                    <span id="total-time">0:00</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="volume-control">
+            <button class="control-btn" id="volume-btn">
+                <i class="fas fa-volume-up"></i>
+            </button>
+            <div class="volume-bar" id="volume-bar">
+                <div class="volume-level" id="volume-level"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 登录模态框 -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-login">&times;</span>
+            <h2 class="modal-title">登录账户</h2>
+            <div class="form-group">
+                <label for="login-email">电子邮箱</label>
+                <input type="email" id="login-email" class="form-control" placeholder="输入您的邮箱">
+            </div>
+            <div class="form-group">
+                <label for="login-password">密码</label>
+                <input type="password" id="login-password" class="form-control" placeholder="输入您的密码">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" style="width: 100%; padding: 15px;">登录</button>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <p>还没有账户？ <a href="#" id="switch-to-register">立即注册</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 注册模态框 -->
+    <div class="modal" id="register-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-register">&times;</span>
+            <h2 class="modal-title">创建账户</h2>
+            <div class="form-group">
+                <label for="register-name">用户名</label>
+                <input type="text" id="register-name" class="form-control" placeholder="输入您的用户名">
+            </div>
+            <div class="form-group">
+                <label for="register-email">电子邮箱</label>
+                <input type="email" id="register-email" class="form-control" placeholder="输入您的邮箱">
+            </div>
+            <div class="form-group">
+                <label for="register-password">密码</label>
+                <input type="password" id="register-password" class="form-control" placeholder="创建密码（至少8位）">
+            </div>
+            <div class="form-group">
+                <label for="register-confirm">确认密码</label>
+                <input type="password" id="register-confirm" class="form-control" placeholder="再次输入密码">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" style="width: 100%; padding: 15px;">注册账户</button>
+            </div>
+            <div style="text-align: center; margin-top: 20px;">
+                <p>已有账户？ <a href="#" id="switch-to-login">立即登录</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 购买确认模态框 -->
+    <div class="modal" id="purchase-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-purchase">&times;</span>
+            <h2 class="modal-title">确认购买</h2>
+            <div id="purchase-info" style="margin-bottom: 20px;">
+                <!-- 购买信息会动态填充 -->
+            </div>
+            <div class="form-group">
+                <label for="payment-method">支付方式</label>
+                <select id="payment-method" class="form-control">
+                    <option value="eth">以太坊 (ETH)</option>
+                    <option value="credit">信用卡/借记卡</option>
+                    <option value="paypal">PayPal</option>
+                    <option value="crypto">其他加密货币</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" style="width: 100%; padding: 15px;">确认购买</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 出价模态框 -->
+    <div class="modal" id="bid-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-bid">&times;</span>
+            <h2 class="modal-title">出价竞拍</h2>
+            <div id="bid-info" style="margin-bottom: 20px;">
+                <!-- 出价信息会动态填充 -->
+            </div>
+            <div class="form-group">
+                <label for="bid-amount">您的出价 (ETH)</label>
+                <input type="number" id="bid-amount" class="form-control" placeholder="输入出价金额">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" style="width: 100%; padding: 15px;">提交出价</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 页脚 -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h3>Harmony Market</h3>
+                <ul>
+                    <li><a href="#">关于我们</a></li>
+                    <li><a href="#">团队介绍</a></li>
+                    <li><a href="#">新闻中心</a></li>
+                    <li><a href="#">职业机会</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>交易指南</h3>
+                <ul>
+                    <li><a href="#">如何购买</a></li>
+                    <li><a href="#">如何出售</a></li>
+                    <li><a href="#">拍卖规则</a></li>
+                    <li><a href="#">版权说明</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>支持</h3>
+                <ul>
+                    <li><a href="#">帮助中心</a></li>
+                    <li><a href="#">常见问题</a></li>
+                    <li><a href="#">联系我们</a></li>
+                    <li><a href="#">社区论坛</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3>订阅更新</h3>
+                <p>获取最新音乐作品和平台更新</p>
+                <div class="newsletter">
+                    <input type="email" id="newsletter-email" placeholder="您的邮箱地址">
+                    <button class="btn btn-primary" id="subscribe-btn">订阅</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2023 Harmony Market. 保留所有权利。
+        </div>
+    </footer>
+    
+    <script>
+        // 音乐播放功能
+        const playButtons = document.querySelectorAll('.play-btn');
+        const playPauseBtn = document.getElementById('play-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const progress = document.getElementById('progress');
+        const currentTimeEl = document.getElementById('current-time');
+        const totalTimeEl = document.getElementById('total-time');
+        const volumeBar = document.getElementById('volume-bar');
+        const volumeLevel = document.getElementById('volume-level');
+        let isPlaying = false;
+        let currentSong = null;
+        
+        // 示例音乐数据
+        const songs = {
+            'midnight-dreams': {
+                title: 'Midnight Dreams',
+                artist: 'Alex Turner',
+                duration: '4:30',
+                cover: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80'
+            },
+            'urban-pulse': {
+                title: 'Urban Pulse',
+                artist: 'Sophia Martinez',
+                duration: '3:45',
+                cover: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80'
+            },
+            'ocean-breeze': {
+                title: 'Ocean Breeze',
+                artist: 'Luna Waves',
+                duration: '5:15',
+                cover: 'https://images.unsplash.com/photo-1494232410401-ad00d5433cfa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80'
+            },
+            'neon-nights': {
+                title: 'Neon Nights',
+                artist: 'DJ Retro',
+                duration: '4:10',
+                cover: 'https://images.unsplash.com/photo-1507838153414-b4b713384a76?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80'
+            }
+        };
+        
+        // 播放按钮功能
+        playButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const songId = this.getAttribute('data-song');
+                currentSong = songs[songId];
+                
+                // 更新播放器信息
+                document.querySelector('.now-playing-title').textContent = currentSong.title;
+                document.querySelector('.now-playing-artist').textContent = currentSong.artist;
+                document.querySelector('.now-playing-cover img').src = currentSong.cover;
+                totalTimeEl.textContent = currentSong.duration;
+                
+                // 开始播放
+                isPlaying = true;
+                playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                currentTimeEl.textContent = '0:00';
+                progress.style.width = '0%';
+                
+                // 显示播放器
+                document.querySelector('.player-container').style.display = 'flex';
+            });
+        });
+        
+        // 播放/暂停按钮
+        playPauseBtn.addEventListener('click', function() {
+            if (!currentSong) return;
+            
+            isPlaying = !isPlaying;
+            this.innerHTML = isPlaying ? 
+                '<i class="fas fa-pause"></i>' : 
+                '<i class="fas fa-play"></i>';
+        });
+        
+        // 进度条点击
+        progressBar.addEventListener('click', function(e) {
+            if (!currentSong) return;
+            
+            const rect = this.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            progress.style.width = `${pos * 100}%`;
+            
+            // 更新时间显示
+            const totalSeconds = getSecondsFromTime(currentSong.duration);
+            const currentSeconds = Math.floor(totalSeconds * pos);
+            currentTimeEl.textContent = formatTime(currentSeconds);
+        });
+        
+        // 音量控制
+        volumeBar.addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            volumeLevel.style.width = `${pos * 100}%`;
+        });
+        
+        // 分类点击
+        const categories = document.querySelectorAll('.category');
+        categories.forEach(cat => {
+            cat.addEventListener('click', function() {
+                const category = this.getAttribute('data-category');
+                
+                // 更新活动状态
+                categories.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                
+                // 筛选内容
+                const cards = document.querySelectorAll('.discover-card');
+                cards.forEach(card => {
+                    if (category === 'all' || card.getAttribute('data-category') === category) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // 模态框控制
+        const loginModal = document.getElementById('login-modal');
+        const registerModal = document.getElementById('register-modal');
+        const purchaseModal = document.getElementById('purchase-modal');
+        const bidModal = document.getElementById('bid-modal');
+        
+        // 登录按钮
+        document.getElementById('login-btn').addEventListener('click', function() {
+            loginModal.style.display = 'flex';
+        });
+        
+        // 注册按钮
+        document.getElementById('register-btn').addEventListener('click', function() {
+            registerModal.style.display = 'flex';
+        });
+        
+        // 关闭模态框
+        document.getElementById('close-login').addEventListener('click', function() {
+            loginModal.style.display = 'none';
+        });
+        
+        document.getElementById('close-register').addEventListener('click', function() {
+            registerModal.style.display = 'none';
+        });
+        
+        document.getElementById('close-purchase').addEventListener('click', function() {
+            purchaseModal.style.display = 'none';
+        });
+        
+        document.getElementById('close-bid').addEventListener('click', function() {
+            bidModal.style.display = 'none';
+        });
+        
+        // 切换登录/注册
+        document.getElementById('switch-to-register').addEventListener('click', function(e) {
+            e.preventDefault();
+            loginModal.style.display = 'none';
+            registerModal.style.display = 'flex';
+        });
+        
+        document.getElementById('switch-to-login').addEventListener('click', function(e) {
+            e.preventDefault();
+            registerModal.style.display = 'none';
+            loginModal.style.display = 'flex';
+        });
+        
+        // 购买按钮
+        document.querySelectorAll('.buy-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const songId = this.getAttribute('data-song');
+                const song = songs[songId];
+                const card = this.closest('.discover-card');
+                const price = card.querySelector('.price').textContent;
+                
+                // 填充购买信息
+                document.getElementById('purchase-info').innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                        <img src="${song.cover}" style="width: 60px; height: 60px; border-radius: 8px;">
+                        <div>
+                            <h3 style="margin-bottom: 5px;">${song.title}</h3>
+                            <p style="color: var(--gray);">${song.artist}</p>
+                        </div>
+                    </div>
+                    <div style="text-align: center; font-size: 1.4rem; font-weight: 700; margin: 15px 0;">
+                        ${price}
+                    </div>
+                `;
+                
+                purchaseModal.style.display = 'flex';
+            });
+        });
+        
+        // 出价按钮
+        document.querySelectorAll('.bid-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const songId = this.getAttribute('data-song');
+                const song = songs[songId];
+                const card = this.closest('.discover-card');
+                const price = card.querySelector('.price').textContent;
+                
+                // 填充出价信息
+                document.getElementById('bid-info').innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                        <img src="${song.cover}" style="width: 60px; height: 60px; border-radius: 8px;">
+                        <div>
+                            <h3 style="margin-bottom: 5px;">${song.title}</h3>
+                            <p style="color: var(--gray);">${song.artist}</p>
+                        </div>
+                    </div>
+                    <div style="text-align: center; font-size: 1.2rem; margin: 15px 0;">
+                        当前最高出价: <span style="font-weight: 700;">${price}</span>
+                    </div>
+                `;
+                
+                bidModal.style.display = 'flex';
+            });
+        });
+        
+        // 艺术家卡片点击
+        document.querySelectorAll('.artist-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const artistId = this.getAttribute('data-artist');
+                alert(`显示艺术家详情: ${artistId}\n\n在实际应用中，这里会跳转到艺术家详情页`);
+            });
+        });
+        
+        // 订阅功能
+        document.getElementById('subscribe-btn').addEventListener('click', function() {
+            const email = document.getElementById('newsletter-email').value;
+            if (email && validateEmail(email)) {
+                alert(`感谢订阅！我们将向 ${email} 发送最新音乐作品和平台更新。`);
+                document.getElementById('newsletter-email').value = '';
+            } else {
+                alert('请输入有效的电子邮箱地址');
+            }
+        });
+        
+        // 工具函数：时间转换
+        function getSecondsFromTime(time) {
+            const [mins, secs] = time.split(':').map(Number);
+            return mins * 60 + secs;
+        }
+        
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+        
+        // 工具函数：邮箱验证
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+        
+        // 模拟交易记录
+        const transactions = [
+            { title: 'Summer Vibes', artist: 'DJ Sunny', price: '0.7 ETH', time: '2分钟前', cover: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80' },
+            { title: 'Mountain Echo', artist: 'Nature Sounds', price: '0.9 ETH', time: '15分钟前', cover: 'https://images.unsplash.com/photo-1507838153414-b4b713384a76?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80' },
+            { title: 'City Lights', artist: 'Urban Beats', price: '1.5 ETH', time: '1小时前', cover: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80' },
+            { title: 'Deep Space', artist: 'Cosmic Sounds', price: '0.6 ETH', time: '3小时前', cover: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80' }
+        ];
+        
+        // 渲染交易记录
+        const transactionList = document.querySelector('.transaction-list');
+        transactions.forEach(transaction => {
+            const item = document.createElement('div');
+            item.className = 'transaction-item';
+            item.innerHTML = `
+                <div class="transaction-cover">
+                    <img src="${transaction.cover}" alt="专辑封面">
+                </div>
+                <div class="transaction-info">
+                    <div class="transaction-title">${transaction.title}</div>
+                    <div class="transaction-artist">${transaction.artist}</div>
+                </div>
+                <div class="transaction-price">${transaction.price}</div>
+                <div class="transaction-time">${transaction.time}</div>
+            `;
+            transactionList.appendChild(item);
+        });
+        
+        // 初始隐藏播放器
+        document.querySelector('.player-container').style.display = 'flex';
+    </script>
+</body>
+</html>
